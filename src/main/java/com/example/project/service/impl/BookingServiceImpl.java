@@ -12,6 +12,7 @@ import com.example.project.repository.UserRepository;
 import com.example.project.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
     private final com.example.project.service.FileUploadService fileUploadService;
 
     @Override
+    @Transactional
     public BookingResponse createBooking(BookingRequest request, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -90,10 +92,18 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponse> getBookings(java.time.LocalDate date, BookingStatus status) {
-        return bookingRepository.findAll()
-                .stream()
-                .filter(b -> date == null || b.getBookingDate().equals(date))
-                .filter(b -> status == null || b.getStatus() == status)
+        List<Booking> bookings;
+        if (date != null && status != null) {
+            bookings = bookingRepository.findByBookingDateAndStatus(date, status);
+        } else if (date != null) {
+            bookings = bookingRepository.findByBookingDate(date);
+        } else if (status != null) {
+            bookings = bookingRepository.findByStatus(status);
+        } else {
+            bookings = bookingRepository.findAll();
+        }
+
+        return bookings.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

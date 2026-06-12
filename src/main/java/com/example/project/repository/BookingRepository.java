@@ -12,6 +12,12 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserId(Long userId);
 
+    List<Booking> findByBookingDate(LocalDate bookingDate);
+
+    List<Booking> findByStatus(BookingStatus status);
+
+    List<Booking> findByBookingDateAndStatus(LocalDate bookingDate, BookingStatus status);
+
     boolean existsByCourtIdAndBookingDateAndTimeSlotAndStatusIn(
             Long courtId,
             LocalDate bookingDate,
