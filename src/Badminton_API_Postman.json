@@ -1376,6 +1376,9 @@
 					"name": "Xem danh sách sân (Public)",
 					"request": {
 						"method": "GET",
+						"auth": {
+							"type": "noauth"
+						},
 						"url": {
 							"raw": "http://localhost:8080/api/v1/courts",
 							"protocol": "http",

@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register",
                                 "/api/v1/auth/refresh", "/api/v1/auth/forgot-password").permitAll()
+                        // Public courts endpoints (read-only)
+                        .requestMatchers("/api/v1/courts", "/api/v1/courts/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/manager/**").hasRole("MANAGER")
                         .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER")
